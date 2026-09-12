@@ -1,0 +1,502 @@
+[
+  {
+    "file": "standard/casual/idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1328419,
+    "sha256": "9e1b1062189ee03983355cdbbee02600205a2b4239967ca3a70a4b924dc7bc7a",
+    "source_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "output_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.0,
+    "idle_copy_identical": true
+  },
+  {
+    "file": "standard/casual/closed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1321164,
+    "sha256": "f4b2c8000466f403f71a2f775c279588726101399da291f61bd725c944c25e82",
+    "source_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "output_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.156,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/casual/annoyed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1318307,
+    "sha256": "9e5d3a218abe47f8bbd6ba1360fa56562bc8e844238838ed96fd84c0e8817d68",
+    "source_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "output_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.966,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/casual/happy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1373627,
+    "sha256": "30cb069a4eb8a07f11dddc4c3c77ea2950a8b6d89148cc91199fe40a1010ffba",
+    "source_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "output_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.951,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/casual/shy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1315977,
+    "sha256": "c7a7de070fbffc4597fff04ddc2f6e563c702b180f5e95c638aa42ca0dbfda0b",
+    "source_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "output_dark_bounds": [
+      350,
+      36,
+      855,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.011,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/pink-waitress/idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1400478,
+    "sha256": "3b1a9831a53d1a5a00933af0e2bcb21dd1a9aec7e4a827e77675753dbef2efbd",
+    "source_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "output_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.0,
+    "idle_copy_identical": true
+  },
+  {
+    "file": "standard/pink-waitress/closed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1421623,
+    "sha256": "99741d20d83d6a3bc7c4c82aa0524172f72a388cedd3c849cc6e73f832b10420",
+    "source_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "output_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.13,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/pink-waitress/annoyed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1401597,
+    "sha256": "fbaadd87ba5c4330bbf081efe73a24a0b2909808ccdc571b65a54a75092b618a",
+    "source_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "output_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.107,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/pink-waitress/happy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1404207,
+    "sha256": "92c68368b2b39f56726107ce0adcd1402661acdcaa31b9ca647ff2a40f74e090",
+    "source_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "output_dark_bounds": [
+      352,
+      33,
+      857,
+      1210
+    ],
+    "max_boundary_drift_px": 1,
+    "outside_face_mean_absolute_rgb_difference": 1.167,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/pink-waitress/shy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1394581,
+    "sha256": "6cc1a995064a86eee0cd6c12e584e476c71868a1ad90b1e959fc50497eecea95",
+    "source_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "output_dark_bounds": [
+      351,
+      33,
+      857,
+      1210
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.158,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/winter-coat/idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1337429,
+    "sha256": "e04b08d32791eb4338f36aee285d191e7011d5e603da3735ef19bd55b9f09d7d",
+    "source_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "output_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.0,
+    "idle_copy_identical": true
+  },
+  {
+    "file": "standard/winter-coat/closed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1399642,
+    "sha256": "a7f301176c67710ca205e82bb561f6784bf6d952c8a918785cfe93c49a823787",
+    "source_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "output_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.018,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/winter-coat/annoyed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1387936,
+    "sha256": "f1d00064f474f5b1ffda84192e5f5849f009fde4a21b84fb05a87fcc1a41910e",
+    "source_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "output_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.105,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/winter-coat/happy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1370492,
+    "sha256": "b12bffda7db7d598373def910badb7a8c98c165b3d8457e6cd8c69c3b899515f",
+    "source_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "output_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.02,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/winter-coat/shy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1382074,
+    "sha256": "58e22b64c7b785aaea6a498e36c2a1e218b043bc5b49a22ea362f6a773862433",
+    "source_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "output_dark_bounds": [
+      352,
+      37,
+      854,
+      1207
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 1.023,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/red-cheongsam/idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1382145,
+    "sha256": "b92f7ef24d3a852030bb61fd6227f90175eac315ccf7ffbac6e31b507d861d47",
+    "source_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "output_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "max_boundary_drift_px": 0,
+    "outside_face_mean_absolute_rgb_difference": 0.0,
+    "idle_copy_identical": true
+  },
+  {
+    "file": "standard/red-cheongsam/closed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1263480,
+    "sha256": "1769faed71d2071ca9b230e4a3d8ef9dd107cadb9b3d177fa5a0f196d1770f70",
+    "source_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "output_dark_bounds": [
+      415,
+      36,
+      831,
+      1208
+    ],
+    "max_boundary_drift_px": 1,
+    "outside_face_mean_absolute_rgb_difference": 1.325,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/red-cheongsam/annoyed.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1358237,
+    "sha256": "def1b6822f53ab1b0efc5bcba487d6f5b51aeff378d5b11cbad37d9a1e25791c",
+    "source_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "output_dark_bounds": [
+      415,
+      36,
+      831,
+      1208
+    ],
+    "max_boundary_drift_px": 1,
+    "outside_face_mean_absolute_rgb_difference": 0.958,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/red-cheongsam/happy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1362262,
+    "sha256": "beb039e13fc9b2eb7c66c92a8688ebcc97497e78171be547e9c6472f92ecc838",
+    "source_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "output_dark_bounds": [
+      415,
+      36,
+      831,
+      1208
+    ],
+    "max_boundary_drift_px": 1,
+    "outside_face_mean_absolute_rgb_difference": 1.001,
+    "idle_copy_identical": null
+  },
+  {
+    "file": "standard/red-cheongsam/shy.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1237140,
+    "sha256": "9449c32991ac2093c6fb838e9c2b89c0a36705fe15d98a7b87a7f3db394ef4a8",
+    "source_dark_bounds": [
+      414,
+      36,
+      831,
+      1208
+    ],
+    "output_dark_bounds": [
+      415,
+      36,
+      831,
+      1208
+    ],
+    "max_boundary_drift_px": 1,
+    "outside_face_mean_absolute_rgb_difference": 1.131,
+    "idle_copy_identical": null
+  }
+]

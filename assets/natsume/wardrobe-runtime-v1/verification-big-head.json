@@ -1,0 +1,188 @@
+{
+  "date": "2026-09-11",
+  "variant": "big-head",
+  "generator": "built-in image_gen edit",
+  "count": 20,
+  "files": [
+    {
+      "path": "big-head/casual/annoyed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1145967,
+      "sha256": "f655dbe437c810167ea0b0d9166b1923f5f7bb46f6dd12e666e2f39d7a53f347",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/casual/closed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1429321,
+      "sha256": "dc649da8102d83609f2596a12d06006554e9dd7ef43c333295fe38e76ff1f64d",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/casual/happy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1431483,
+      "sha256": "d625936f1805fb9b331a363f26e783edeebbe1e0bfc1b78f981064651dad2e09",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/casual/idle.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1129441,
+      "sha256": "d11ca4e3b9033fb7f46a29173f718d32537d2d60d0620190cc5611ac1d208e6c",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/casual/shy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1122680,
+      "sha256": "2c610d65bf677c380ae476cbda4dde83c8da4990ab1ae4ce7d81baae15f41f63",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/pink-waitress/annoyed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1215247,
+      "sha256": "253adc36148a721e663c44c20a3bf10e39d98eada0936a6ed59bea1c69fcf8c6",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/pink-waitress/closed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1471317,
+      "sha256": "3100e3dec59581d818acf0124b31238f6309993d577abc8299c9bf854a772922",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/pink-waitress/happy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1094583,
+      "sha256": "cd1c1ff7f5b99dbd324320dd3c5af6def325137ffec166603820e199b0b2d2d5",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/pink-waitress/idle.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1216440,
+      "sha256": "4ebdbd9009868645d617ce72c937874ae0c94e8fecf7a41cb33b952cd24beecd",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/pink-waitress/shy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1192879,
+      "sha256": "06c3c46165138a8d5c8c2be2331d18d130daf22639e7b5ac0df26ac121a1ae6d",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/red-cheongsam/annoyed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1422256,
+      "sha256": "b26c5f2e77a442fdec1364e3df1ea86631c7025b7a7211620cb587b95207bbc6",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/red-cheongsam/closed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1416470,
+      "sha256": "319ec55b16e206308bb835f10f55bd048c7581d1cd72bf185333a6fb975cd61b",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/red-cheongsam/happy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1436333,
+      "sha256": "e667d8b71a802b0339214df99c9a114f6c64f44da5eecdd77343ed9e1904ee5b",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/red-cheongsam/idle.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1432651,
+      "sha256": "bb4b1e37f33a181553281f86c752e58c5c69c733807b4854363ff0f2ce489de1",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/red-cheongsam/shy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1429333,
+      "sha256": "d580073c6ea3e46984ac7c2c2f472bb75bd73485cbe1392e64232b396f96ef9a",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/winter-coat/annoyed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1417168,
+      "sha256": "7c53166ce5c76c56e1e193c3e46178a4dcdc56cab2a91fd20f5b9791689667ef",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/winter-coat/closed.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1427839,
+      "sha256": "d1c012d4783d1743e5f058470ea925499c7f28557d0d7728853bfcb9007822d2",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/winter-coat/happy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1138903,
+      "sha256": "ee6bac72ce18b6af92e107e256d361cd4e66b81c08dba07352077f8c2e51a1a6",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/winter-coat/idle.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1154218,
+      "sha256": "65b6ab5df6ffd7628d0b6bca6a0d172c8e6ba515d5b8e8d19646c35074b13ef4",
+      "visualReview": "passed"
+    },
+    {
+      "path": "big-head/winter-coat/shy.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1110630,
+      "sha256": "90a311167e73f0c80abcc284bca010f0c2f58f49905598979d21410b0e0390fb",
+      "visualReview": "passed"
+    }
+  ]
+}

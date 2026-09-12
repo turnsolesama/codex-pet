@@ -1,0 +1,177 @@
+[
+  {
+    "file": "standard/maid.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1161778,
+    "sha256": "bf81bb7a3baf545fa96e9d5bf96db842b681bbec65fa6f0b9ff97f1537578474",
+    "dark_bounds": [
+      54,
+      103,
+      738,
+      1126
+    ],
+    "hand_contour_samples": [
+      {
+        "y_band": [
+          605,
+          714
+        ],
+        "leftmost_x": 77
+      },
+      {
+        "y_band": [
+          795,
+          908
+        ],
+        "leftmost_x": 81
+      }
+    ],
+    "suggested_contact_x": 81,
+    "visual_review": "visible short neck, costume collar and shoulder; two bent-finger grip hands with connected sleeves; no legs or rendered border",
+    "runtime_contact_x": 81
+  },
+  {
+    "file": "standard/casual.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1119380,
+    "sha256": "59cc185b87befa286e1071539cdae7d9075cdfe9fda2a6d2c5377eb83fd15b06",
+    "dark_bounds": [
+      129,
+      102,
+      696,
+      1093
+    ],
+    "hand_contour_samples": [
+      {
+        "y_band": [
+          519,
+          599
+        ],
+        "leftmost_x": 141
+      },
+      {
+        "y_band": [
+          661,
+          745
+        ],
+        "leftmost_x": 145
+      }
+    ],
+    "suggested_contact_x": 145,
+    "visual_review": "visible short neck, costume collar and shoulder; two bent-finger grip hands with connected sleeves; no legs or rendered border",
+    "runtime_contact_x": 145
+  },
+  {
+    "file": "standard/pink-waitress.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1151488,
+    "sha256": "6d600208e686e8b017bde5a2d678e1101dad4e71aa88947ee8e50cef3ac28ddd",
+    "dark_bounds": [
+      118,
+      47,
+      801,
+      1212
+    ],
+    "hand_contour_samples": [
+      {
+        "y_band": [
+          500,
+          599
+        ],
+        "leftmost_x": 159
+      },
+      {
+        "y_band": [
+          688,
+          808
+        ],
+        "leftmost_x": 165
+      }
+    ],
+    "suggested_contact_x": 165,
+    "visual_review": "visible short neck, costume collar and shoulder; two bent-finger grip hands with connected sleeves; no legs or rendered border",
+    "runtime_contact_x": 165
+  },
+  {
+    "file": "standard/winter-coat.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1458601,
+    "sha256": "a93dfc05d0c5e6bb32fb4930e8cb209ff4927bb233a8a28d8466e70e2de5adba",
+    "dark_bounds": [
+      200,
+      33,
+      914,
+      1220
+    ],
+    "hand_contour_samples": [
+      {
+        "y_band": [
+          570,
+          684
+        ],
+        "leftmost_x": 205
+      },
+      {
+        "y_band": [
+          762,
+          870
+        ],
+        "leftmost_x": 208
+      }
+    ],
+    "suggested_contact_x": 208,
+    "visual_review": "visible short neck, costume collar and shoulder; two bent-finger grip hands with connected sleeves; no legs or rendered border",
+    "runtime_contact_x": 208
+  },
+  {
+    "file": "standard/red-cheongsam.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "bytes": 1411616,
+    "sha256": "adb17d807b565c02b9074b513a676432808d2fea2813f7c80163280031e6f522",
+    "dark_bounds": [
+      64,
+      141,
+      713,
+      1034
+    ],
+    "hand_contour_samples": [
+      {
+        "y_band": [
+          598,
+          682
+        ],
+        "leftmost_x": 86
+      },
+      {
+        "y_band": [
+          762,
+          855
+        ],
+        "leftmost_x": 89
+      }
+    ],
+    "suggested_contact_x": 89,
+    "visual_review": "visible short neck, costume collar and shoulder; two bent-finger grip hands with connected sleeves; no legs or rendered border",
+    "runtime_contact_x": 89
+  }
+]

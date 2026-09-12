@@ -1,0 +1,133 @@
+{
+  "date": "2026-09-11",
+  "variant": "big-head",
+  "generator": "built-in image_gen edit",
+  "count": 5,
+  "files": [
+    {
+      "path": "big-head/casual.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1118415,
+      "sha256": "427b79d09247724cbd9884698aca08a0a7c8defc6db8ab6dcf51b70348086ec2",
+      "upperHand": {
+        "xMin": 278,
+        "yBand": [
+          660,
+          740
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "lowerHand": {
+        "xMin": 281,
+        "yBand": [
+          830,
+          905
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "visualReview": "passed: skin neck connects to collar and shoulders; two gripping hands connect via cuff and forearm; no torso below upper chest or legs"
+    },
+    {
+      "path": "big-head/maid.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1150713,
+      "sha256": "45d1cb807ffa7fd9c9d5d886f9e16b649eeb7a0dc26aebf3b10eb2975b7f934d",
+      "upperHand": {
+        "xMin": 277,
+        "yBand": [
+          660,
+          740
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "lowerHand": {
+        "xMin": 280,
+        "yBand": [
+          830,
+          905
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "visualReview": "passed: skin neck connects to collar and shoulders; two gripping hands connect via cuff and forearm; no torso below upper chest or legs"
+    },
+    {
+      "path": "big-head/pink-waitress.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1131463,
+      "sha256": "0d0fbeb9ebdb636cd92329cc9336f03604078e0a8423e662fa9bbf5f42684046",
+      "upperHand": {
+        "xMin": 278,
+        "yBand": [
+          660,
+          740
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "lowerHand": {
+        "xMin": 281,
+        "yBand": [
+          830,
+          905
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "visualReview": "passed: skin neck connects to collar and shoulders; two gripping hands connect via cuff and forearm; no torso below upper chest or legs"
+    },
+    {
+      "path": "big-head/red-cheongsam.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1090615,
+      "sha256": "032bd3f3f2e61257609b68599fca2199a21a29d9f6c31e40b0be298c374ddf19",
+      "upperHand": {
+        "xMin": 277,
+        "yBand": [
+          660,
+          740
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "lowerHand": {
+        "xMin": 281,
+        "yBand": [
+          830,
+          905
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "visualReview": "passed: skin neck connects to collar and shoulders; two gripping hands connect via cuff and forearm; no torso below upper chest or legs"
+    },
+    {
+      "path": "big-head/winter-coat.png",
+      "width": 1254,
+      "height": 1254,
+      "pixelFormat": "Format24bppRgb",
+      "bytes": 1097320,
+      "sha256": "7173ce01e637ef39422da00beb70e182da03df415d646f87e1f53048923af72f",
+      "upperHand": {
+        "xMin": 277,
+        "yBand": [
+          660,
+          740
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "lowerHand": {
+        "xMin": 281,
+        "yBand": [
+          830,
+          905
+        ],
+        "method": "non-white contour (<220 any RGB) in visually verified hand band and x180..350"
+      },
+      "visualReview": "passed: skin neck connects to collar and shoulders; two gripping hands connect via cuff and forearm; no torso below upper chest or legs"
+    }
+  ]
+}

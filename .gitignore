@@ -1,0 +1,53 @@
+# 内部文档(仅本地保留)
+PROJECT-PLAN.md
+desktop/README.md
+
+# 构建输出:exe 通过 GitHub Releases 发布
+releases/
+
+# 网页预览与 QA 产物(仅本地保留)
+animation-preview/
+desktop/qa/
+desktop/qa-v*/
+
+# 历史审核与概念素材(仅本地保留)
+concepts/
+references/
+
+# 素材:只保留构建引用的文件与生成提示词文档
+assets/*
+!assets/natsume/
+assets/natsume/*
+!assets/natsume/restoration-v1/
+!assets/natsume/animation-v1/
+!assets/natsume/interaction-v1/
+!assets/natsume/body-types-v1/
+!assets/natsume/edge-grip-v2/
+!assets/natsume/wardrobe-runtime-v1/
+assets/natsume/restoration-v1/*
+!assets/natsume/restoration-v1/outfits/
+!assets/natsume/restoration-v1/motions/
+assets/natsume/restoration-v1/outfits/*
+!assets/natsume/restoration-v1/outfits/maid.png
+assets/natsume/restoration-v1/motions/*
+!assets/natsume/restoration-v1/motions/a02-sit.png
+!assets/natsume/restoration-v1/motions/a03-sleep.png
+!assets/natsume/restoration-v1/motions/d01-pickup.png
+!assets/natsume/restoration-v1/motions/d02-drag.png
+!assets/natsume/restoration-v1/motions/d03-land.png
+assets/natsume/animation-v1/*
+!assets/natsume/animation-v1/standard-closed.png
+!assets/natsume/animation-v1/standard-annoyed.png
+!assets/natsume/animation-v1/big-head-closed.png
+!assets/natsume/animation-v1/big-head-annoyed.png
+assets/natsume/interaction-v1/*
+!assets/natsume/interaction-v1/standard-happy.png
+!assets/natsume/interaction-v1/standard-shy.png
+!assets/natsume/interaction-v1/big-head-happy.png
+!assets/natsume/interaction-v1/big-head-shy.png
+assets/natsume/body-types-v1/*
+!assets/natsume/body-types-v1/big-head.png
+assets/natsume/edge-grip-v2/standard/*
+!assets/natsume/edge-grip-v2/standard/*.png
+assets/natsume/edge-grip-v2/big-head/*
+!assets/natsume/edge-grip-v2/big-head/*.png
