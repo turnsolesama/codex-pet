@@ -33,7 +33,6 @@ namespace CodexPet
         [DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr dc, IntPtr obj);
         [DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr obj);
         [DllImport("user32.dll", EntryPoint = "UpdateLayeredWindow", SetLastError = true)] private static extern bool UpdateLayeredWindowSized(IntPtr window, IntPtr screen, IntPtr position, ref NativeSize size, IntPtr source, ref NativePoint sourcePosition, int colorKey, ref Blend blend, int flags);
-        [DllImport("user32.dll", EntryPoint = "UpdateLayeredWindow", SetLastError = true)] private static extern bool UpdateLayeredWindowPixels(IntPtr window, IntPtr screen, IntPtr position, IntPtr size, IntPtr source, ref NativePoint sourcePosition, int colorKey, ref Blend blend, int flags);
         [DllImport("user32.dll", SetLastError = true)] private static extern bool GetWindowRect(IntPtr window, out NativeRect bounds);
 
         internal Rectangle GetNativeBounds()
@@ -60,9 +59,9 @@ namespace CodexPet
                 Blend blend = new Blend { Operation = 0, Flags = 0, Alpha = 255, Format = 1 };
                 // Location is owned by the form's explicit placement/drag code. NULL leaves the native
                 // position unchanged and avoids feeding DPI-rounded Left/Top back into every paint.
-                bool updated = resize
-                    ? UpdateLayeredWindowSized(window, screen, IntPtr.Zero, ref size, memory, ref origin, 0, ref blend, 2)
-                    : UpdateLayeredWindowPixels(window, screen, IntPtr.Zero, IntPtr.Zero, memory, ref origin, 0, ref blend, 2);
+                // Always describe the submitted source surface. Under Windows DPI virtualization,
+                // NULL size can retain the compositor's scaled surface instead of refreshing it.
+                bool updated = UpdateLayeredWindowSized(window, screen, IntPtr.Zero, ref size, memory, ref origin, 0, ref blend, 2);
                 if (!updated)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
                 presentedHandle = window;

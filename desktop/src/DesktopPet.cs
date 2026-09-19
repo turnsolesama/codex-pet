@@ -21,10 +21,12 @@ namespace CodexPet
             LayeredForm.Inspectable = Array.IndexOf(args, "--ui-test") >= 0;
             string diagnostics = null;
             string initialOutfit = "maid";
+            string initialVariant = "standard";
             for (int i = 0; i + 1 < args.Length; i++)
             {
                 if (args[i] == "--diagnostics") diagnostics = Path.GetFullPath(args[i + 1]);
                 if (args[i] == "--outfit") initialOutfit = args[i + 1];
+                if (args[i] == "--variant") initialVariant = args[i + 1];
             }
             if (smoke && diagnostics == null) return 2;
             try
@@ -47,7 +49,10 @@ namespace CodexPet
                     {
                         using (SpriteBank bank = new SpriteBank())
                         using (DesktopPet pet = new DesktopPet(bank, false, initialOutfit))
+                        {
+                            pet.SetInitialVariant(initialVariant);
                             Application.Run(pet);
+                        }
                     }
                     finally { mutex.ReleaseMutex(); }
                 }
@@ -66,7 +71,7 @@ namespace CodexPet
         }
     }
 
-    internal sealed class DesktopPet : LayeredForm
+    internal sealed partial class DesktopPet : LayeredForm
     {
         private readonly SpriteBank bank;
         private readonly bool diagnosticsMode;
@@ -79,12 +84,13 @@ namespace CodexPet
         private ContextMenuStrip menu;
         private NotifyIcon tray;
         private Icon trayIcon;
+        private Icon applicationIcon;
         private Bitmap canvas;
         private string variant = "standard";
         private string outfit = "maid";
         private static readonly string[] Outfits = new string[] { "maid", "casual", "pink-waitress", "winter-coat", "red-cheongsam" };
         private static readonly string[] OutfitNames = new string[] { "女仆装", "日常私服", "粉色服务员", "冬日外套", "红金旗袍" };
-        private int petSize = 280;
+        private int petSize = 240;
         private bool breathing = true, sleeping, paused, dragging, pressed, falling;
         private bool seated, suppressPoses;
         private double dragPoseStarted, landPoseUntil, dragMagnitude;
@@ -115,6 +121,8 @@ namespace CodexPet
             if (Array.IndexOf(Outfits, initialOutfit) < 0) throw new ArgumentException("未知服装：" + initialOutfit);
             outfit = initialOutfit;
             Text = "枣子姐桌宠";
+            applicationIcon = AppAssets.LoadIcon();
+            Icon = applicationIcon;
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = LayeredForm.Inspectable;
             StartPosition = FormStartPosition.Manual;
@@ -140,6 +148,12 @@ namespace CodexPet
         {
             base.OnShown(e);
             ReturnToCorner();
+            if (variant == "official" && bank.HasOfficialMotions)
+            {
+                seated = true;
+                Location = CornerPlacement(Screen.FromPoint(Cursor.Position).WorkingArea);
+                windowY = Top;
+            }
             lastTick = clock.Elapsed.TotalSeconds;
             DrawFrame();
             if (timer != null) timer.Start();
@@ -160,7 +174,7 @@ namespace CodexPet
         private Rectangle FindVariantBounds(string type, string clothing)
         {
             Rectangle bounds = Rectangle.Empty;
-            foreach (string expression in new string[] { "idle", "closed", "annoyed" })
+            foreach (string expression in type == "official" ? new string[] { "idle", "closed", "annoyed", "happy", "shy" } : new string[] { "idle", "closed", "annoyed" })
             {
                 Bitmap bitmap = bank.Get(type, clothing, expression);
                 Rectangle current = FindBitmapBounds(bitmap, type + "/" + clothing + "/" + expression);
@@ -203,18 +217,19 @@ namespace CodexPet
 
         private Rectangle GetGripCrop()
         {
+            if (variant == "official") return OfficialPeekCrop();
             string key = variant + "." + outfit;
             Rectangle bounds;
             if (!gripCrops.TryGetValue(key, out bounds))
             {
                 bounds = FindBitmapBounds(bank.GetGrip(variant, outfit), "grip/" + key, 0);
-                // Match the outer fingertips of both hands, not a ribbon or headdress extending farther left.
-                // These source-pixel anchors belong to edge-grip-v2; the screen naturally occludes anything outside.
+                // Align the occluding edge through the grip, not outside the fingertips.
+                // Maid v3 uses the vertical body occlusion line; fingers extend off-screen.
                 int contactX;
                 if (variant == "standard")
-                    contactX = outfit == "maid" ? 81 : outfit == "casual" ? 145 : outfit == "pink-waitress" ? 165 : outfit == "winter-coat" ? 208 : 89;
+                    contactX = outfit == "maid" ? 518 : outfit == "casual" ? 145 : outfit == "pink-waitress" ? 165 : outfit == "winter-coat" ? 208 : 89;
                 else
-                    contactX = outfit == "maid" ? 280 : 281;
+                    contactX = outfit == "maid" ? 400 : 281;
                 bounds = Rectangle.FromLTRB(Math.Max(bounds.Left, contactX), bounds.Top, bounds.Right, bounds.Bottom);
                 gripCrops.Add(key, bounds);
             }
@@ -224,14 +239,13 @@ namespace CodexPet
         private float GripHeight()
         {
             Rectangle source = GetGripCrop();
-            // Size the head-and-shoulders view by width so long hair does not make the face tiny.
-            float width = petSize * (variant == "standard" ? 0.40f : 0.55f);
+            if (variant == "official") return bank.HasOfficialMotions ? source.Height * OfficialActionScale("grip") : (float)petSize * source.Height / GetCrop(variant, outfit).Height;
+            float width = petSize * (variant == "standard" ? .40f : .55f);
             if (dockArea.Width > 9) width = Math.Min(width, dockArea.Width - 9);
             float height = width * source.Height / source.Width;
             if (dockArea.Height > 40) height = Math.Min(height, dockArea.Height - 40);
             return Math.Max(1, height);
         }
-
         private Rectangle GetPoseCrop(string pose)
         {
             Rectangle bounds;
@@ -248,6 +262,7 @@ namespace CodexPet
         private string CurrentPose()
         {
             if (!SupportsPoses() || dockSide != 0 || suppressPoses) return null;
+            if (dragging && !gravityEnabled && (seated || sleeping)) return sleeping ? "sleep" : "sit";
             if (dragging)
                 return clock.Elapsed.TotalSeconds - dragPoseStarted < 0.15 || dragMagnitude < 90 ? "pickup" : "drag";
             if (falling) return "pickup";
@@ -258,22 +273,29 @@ namespace CodexPet
 
         private void StandUp()
         {
+            PrepareInteraction();
+            RectangleF previousFootprint = PlacementFootprint();
             seated = sleeping = false;
+            pinnedOfficialPose = null;
             landPoseUntil = 0;
             jumpTime = landingTime = -10;
             feedbackUntil = annoyedUntil = 0;
+            ReconcileOfficialPosePlacement(previousFootprint,false);
             DrawFrame();
         }
 
         private void ToggleSit()
         {
-            if (!SupportsPoses()) return;
-            if (dockSide != 0) ExpandDock(false, Cursor.Position);
-            seated = !seated;
+            if (!CanSit()) return;
+            PrepareInteraction();
+            RectangleF previousFootprint = PlacementFootprint();
+            seated = !IsSittingRestPose();
+            pinnedOfficialPose = null;
             sleeping = false;
             landPoseUntil = 0;
             jumpTime = landingTime = -10;
             feedbackUntil = annoyedUntil = 0;
+            ReconcileOfficialPosePlacement(previousFootprint,false);
             DrawFrame();
         }
 
@@ -293,6 +315,7 @@ namespace CodexPet
 
         private double HeadFraction()
         {
+            if (variant == "official") return OfficialHeadFraction();
             if (outfit == "maid") return variant == "standard" ? 0.36 : 0.54;
             if (variant == "standard") return 0.35;
             if (outfit == "casual") return 0.52;
@@ -302,20 +325,35 @@ namespace CodexPet
 
         private void ChangeVariant(string value)
         {
+            bool leavingOfficial = variant == "official" && value != "official";
+            bool enteringOfficial = variant != "official" && value == "official";
+            int previousSize = petSize;
+            Rectangle previousArea = PlacementWorkingArea();
+            if (value != "standard" && value != "big-head" && value != "official") throw new ArgumentException("未知体型：" + value);
+            if (value == "official" && !bank.HasOfficial) throw new InvalidOperationException("当前程序未包含本地官方立绘资源。");
             GetCrop(value, outfit);
             variant = value;
+            pinnedOfficialPose = null;
             seated = false;
             landPoseUntil = 0;
+            if (enteringOfficial || leavingOfficial)
+            {
+                ChangeSize((int)Math.Round(previousSize * (enteringOfficial ? 4.0 / 3.0 : 3.0 / 4.0)));
+                return;
+            }
             if (dockSide != 0) { ResizeCanvas(); PositionDock(); }
+            else if (leavingOfficial) { Location=ClampPlacement(Location,previousArea); windowY=Top; }
             DrawFrame();
         }
 
         private void ChangeOutfit(string value)
         {
             if (Array.IndexOf(Outfits, value) < 0) throw new ArgumentException("未知服装：" + value);
+            RectangleF previousFootprint = PlacementFootprint();
+            bool keepSeated = seated && variant == "official" && bank.HasOfficialMotions;
             GetCrop(variant, value);
             outfit = value;
-            seated = false;
+            seated = keepSeated;
             landPoseUntil = 0;
             feedbackUntil = annoyedUntil = 0;
             feedbackKind = bubbleText = "";
@@ -324,115 +362,31 @@ namespace CodexPet
             clicks.Clear();
             // Full-body canvas and location stay fixed, preserving the horizontal center and foot anchor.
             if (dockSide != 0) { ResizeCanvas(); PositionDock(); }
+            else ReconcileOfficialPosePlacement(previousFootprint,false);
             DrawFrame();
         }
 
-        private void BuildMenu()
-        {
-            menu = new ContextMenuStrip();
-            Add("标准 Q 版", delegate { ChangeVariant("standard"); });
-            Add("大头 Q 版", delegate { ChangeVariant("big-head"); });
-            menu.Items.Add(new ToolStripSeparator());
-            ToolStripMenuItem sizes = new ToolStripMenuItem("尺寸");
-            foreach (int value in new int[] { 200, 280, 360 })
-            {
-                int captured = value;
-                ToolStripMenuItem item = new ToolStripMenuItem((value == 200 ? "小" : value == 280 ? "中" : "大") + "（" + value + "）");
-                item.Tag = value;
-                item.Click += delegate { ChangeSize(captured); };
-                sizes.DropDownItems.Add(item);
-            }
-            menu.Items.Add(sizes);
-            Add("呼吸 / 眨眼", delegate { breathing = !breathing; DrawFrame(); });
-            Add("开心轻跳", delegate { if (dockSide != 0) ExpandDock(false, Cursor.Position); paused = false; ReactToPart("feet"); });
-            Add("嫌弃", delegate { paused = false; ReactToPart("body"); });
-            Add("睡觉 / 唤醒", delegate { if (dockSide != 0) ExpandDock(false, Cursor.Position); sleeping = !sleeping; seated = false; landPoseUntil = 0; jumpTime = -10; annoyedUntil = 0; feedbackUntil = 0; DrawFrame(); });
-            Add("暂停 / 继续", delegate { paused = !paused; lastTick = clock.Elapsed.TotalSeconds; DrawFrame(); });
-            Add("置顶", delegate { TopMost = !TopMost; });
-            menu.Items.Add(new ToolStripSeparator());
-            Add("回到右下角", ReturnToCorner);
-            Add("退出", Close);
-            menu.Items.Add(new ToolStripSeparator());
-            Add("收到左侧边框", delegate { DockAtSide(-1); });
-            Add("收到右侧边框", delegate { DockAtSide(1); });
-            Add("展开全身", delegate { ExpandDock(false, Cursor.Position); });
-            Add("开心表情", delegate { paused = false; ReactToPart("hair"); });
-            Add("害羞表情", delegate { paused = false; ReactToPart("face"); });
-            menu.Items.Add(new ToolStripSeparator());
-            ToolStripMenuItem wardrobe = new ToolStripMenuItem("换装");
-            for (int i = 0; i < Outfits.Length; i++)
-            {
-                string selectedOutfit = Outfits[i];
-                ToolStripMenuItem clothing = new ToolStripMenuItem(OutfitNames[i]);
-                clothing.Tag = selectedOutfit;
-                clothing.Click += delegate { ChangeOutfit(selectedOutfit); };
-                wardrobe.DropDownItems.Add(clothing);
-            }
-            menu.Items.Add(wardrobe);
-            ToolStripMenuItem sitting = new ToolStripMenuItem("坐下 / 站起");
-            sitting.Click += delegate { ToggleSit(); };
-            menu.Items.Add(sitting);
-            menu.Opening += delegate
-            {
-                ((ToolStripMenuItem)menu.Items[0]).Checked = variant == "standard";
-                ((ToolStripMenuItem)menu.Items[1]).Checked = variant == "big-head";
-                foreach (ToolStripMenuItem item in sizes.DropDownItems) item.Checked = (int)item.Tag == petSize;
-                ((ToolStripMenuItem)menu.Items[4]).Checked = breathing;
-                ((ToolStripMenuItem)menu.Items[7]).Checked = sleeping;
-                ((ToolStripMenuItem)menu.Items[7]).Text = sleeping ? "唤醒" : "睡觉";
-                ((ToolStripMenuItem)menu.Items[8]).Checked = paused;
-                ((ToolStripMenuItem)menu.Items[8]).Text = paused ? "继续动画" : "暂停动画";
-                ((ToolStripMenuItem)menu.Items[9]).Checked = TopMost;
-                ((ToolStripMenuItem)menu.Items[14]).Checked = dockSide == -1;
-                ((ToolStripMenuItem)menu.Items[15]).Checked = dockSide == 1;
-                menu.Items[16].Enabled = dockSide != 0;
-                foreach (ToolStripMenuItem clothing in wardrobe.DropDownItems) clothing.Checked = (string)clothing.Tag == outfit;
-                sitting.Enabled = SupportsPoses();
-                sitting.Checked = seated;
-                sitting.Text = seated ? "站起" : "坐下";
-            };
-        }
-
-        private void Add(string text, Action action)
-        {
-            ToolStripMenuItem item = new ToolStripMenuItem(text);
-            item.Click += delegate { action(); };
-            menu.Items.Add(item);
-        }
-
-        [DllImport("user32.dll")] private static extern bool DestroyIcon(IntPtr handle);
-
         private void CreateTrayIcon()
         {
-            using (Bitmap thumbnail = new Bitmap(32, 32, PixelFormat.Format32bppArgb))
-            {
-                using (Graphics g = Graphics.FromImage(thumbnail))
-                {
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    Rectangle crop = GetCrop("big-head", outfit);
-                    int headHeight = Math.Min(crop.Height, crop.Width);
-                    g.DrawImage(bank.Get("big-head", outfit, "idle"), new Rectangle(0, 0, 32, 32), new Rectangle(crop.X, crop.Y, crop.Width, headHeight), GraphicsUnit.Pixel);
-                }
-                IntPtr handle = thumbnail.GetHicon();
-                try { using (Icon borrowed = Icon.FromHandle(handle)) trayIcon = (Icon)borrowed.Clone(); }
-                finally { DestroyIcon(handle); }
-            }
+            trayIcon = new Icon(applicationIcon, new Size(32, 32));
             tray = new NotifyIcon();
             tray.Icon = trayIcon;
             tray.Text = "枣子姐桌宠 · 右键菜单";
             tray.ContextMenuStrip = menu;
-            tray.DoubleClick += delegate { ReturnToCorner(); };
+            tray.DoubleClick += delegate { ResumeAnimation(); ReturnToCorner(); };
             tray.Visible = true;
         }
 
         private void ChangeSize(int size)
         {
-            Rectangle area = Screen.FromRectangle(Bounds).WorkingArea;
+            Rectangle area = PlacementWorkingArea();
             int center = Left + Width / 2;
+            float bottom = Top + PlacementFootprint().Bottom;
             petSize = size;
             ResizeCanvas();
             if (dockSide != 0) { PositionDock(); DrawFrame(); return; }
-            Location = new Point(Clamp(center - Width / 2, area.Left, area.Right - Width), area.Bottom - Height);
+            int targetY = gravityEnabled ? PlacementFloor(area) : (int)Math.Round(bottom - PlacementFootprint().Bottom);
+            Location = ClampPlacement(new Point(center - Width / 2, targetY), area);
             windowY = Top;
             falling = false;
             jumpTime = -10;
@@ -443,12 +397,13 @@ namespace CodexPet
 
         private void ReturnToCorner()
         {
+            pinnedOfficialPose = null;
             dockTransitionPending = false;
             seated = false;
             landPoseUntil = 0;
             if (dockSide != 0) { dockSide = 0; ResizeCanvas(); }
             Rectangle area = Screen.FromPoint(Cursor.Position).WorkingArea;
-            Location = new Point(Math.Max(area.Left, area.Right - Width - 18), area.Bottom - Height);
+            Location = CornerPlacement(area);
             windowY = Top;
             falling = false;
             pressed = dragging = false;
@@ -461,14 +416,27 @@ namespace CodexPet
 
         private void DockAtSide(int side)
         {
-            Rectangle area = dockSide == 0 ? Screen.FromRectangle(Bounds).WorkingArea : dockArea;
-            int center = dockSide == 0 ? Top + Height - 7 - petSize + (int)(petSize * HeadFraction() / 2) : dockCenterY;
+            Rectangle area = dockSide == 0 ? PlacementWorkingArea() : dockArea;
+            int center = dockSide == 0 ? Top + HeadCenterOffset() : dockCenterY;
             DockAtSide(side, area, center);
+        }
+
+        private int HeadCenterOffset()
+        {
+            if (variant == "official")
+            {
+                string action = OfficialAction();
+                float head = action == null ? petSize * .18f : bank.OfficialMotionHead(outfit, action) * OfficialActionScale(action);
+                return (int)Math.Round(GetOfficialRestBounds().Top + head / 2);
+            }
+            string pose = CurrentPose();
+            float height = pose == null ? petSize : GetPoseCrop(pose).Height * ((float)petSize / GetCrop("standard", "maid").Height);
+            return (int)Math.Round(Height - 7 - height + petSize * HeadFraction() / 2);
         }
 
         private void DockAtSide(int side, Rectangle area, int centerY)
         {
-            seated = sleeping = false;
+            if (gravityEnabled) seated = sleeping = false;
             landPoseUntil = 0;
             dockArea = area;
             dockCenterY = centerY;
@@ -480,7 +448,8 @@ namespace CodexPet
             jumpTime = landingTime = -10;
             feedbackUntil = annoyedUntil = 0;
             clicks.Clear();
-            bank.GetGrip(variant, outfit); // A cached crop may outlive its decoded LRU frame.
+            if (variant == "official") bank.Get(variant, outfit, "idle");
+            else bank.GetGrip(variant, outfit); // A cached crop may outlive its decoded LRU frame.
             ResizeCanvas();
             PositionDock();
             // Preparing a previously unseen grip must not consume the visible entry animation.
@@ -507,10 +476,10 @@ namespace CodexPet
             detachedEdgeX = oldSide < 0 ? area.Left : area.Right;
             dockSide = 0;
             ResizeCanvas();
-            int x = forDrag ? cursor.X - Width / 2 : oldSide < 0 ? area.Left : area.Right - Width;
-            int headCenterOffset = Height - 7 - petSize + (int)(petSize * HeadFraction() / 2);
+            int x = forDrag ? cursor.X - Width / 2 : oldSide < 0 ? PlacementLeftLimit(area) : PlacementRightLimit(area);
+            int headCenterOffset = HeadCenterOffset();
             int y = (forDrag ? cursor.Y : oldCenter) - headCenterOffset;
-            Location = new Point(Clamp(x, area.Left, area.Right - Width), Clamp(y, area.Top, area.Bottom - Height));
+            Location = ClampPlacement(new Point(x, y), area);
             windowY = Top;
             falling = false;
             jumpTime = landingTime = -10;
@@ -520,9 +489,11 @@ namespace CodexPet
             if (forDrag) { downCursor = lastCursor = cursor; downWindow = Location; }
             else
             {
+                RectangleF previousFootprint = PlacementFootprint();
                 landingArea = area;
                 verticalSpeed = 0;
-                falling = Top < area.Bottom - Height;
+                falling = gravityEnabled && Top < PlacementFloor(area);
+                ReconcileOfficialPosePlacement(previousFootprint,area,false);
             }
             DrawFrame();
         }
@@ -535,6 +506,7 @@ namespace CodexPet
 
         private void Tick(object sender, EventArgs e)
         {
+            RectangleF previousFootprint = PlacementFootprint();
             double now = clock.Elapsed.TotalSeconds;
             double dt = Math.Min(0.05, Math.Max(0, now - lastTick));
             lastTick = now;
@@ -551,6 +523,7 @@ namespace CodexPet
                     nextBlink = simulationTime + 3.4 + Math.Sin(simulationTime * 1.7) * 0.8;
                 }
             }
+            ReconcileOfficialPosePlacement(previousFootprint,falling);
             // Even a delayed first Tick must paint the final visible grip before a paused animation can stop.
             if (!paused || fallChanged || dragging || (dockSide != 0 && dockTransitionPending)) DrawFrame();
         }
@@ -558,8 +531,9 @@ namespace CodexPet
         private bool StepFall(double dt)
         {
             if (!falling || dragging) return false;
+            RectangleF previousFootprint = PlacementFootprint();
             dt = Math.Max(0, Math.Min(0.05, dt));
-            double floor = landingArea.Bottom - Height;
+            double floor = PlacementFloor(landingArea);
             verticalSpeed += petSize * 7.0 * dt;
             windowY += verticalSpeed * dt;
             if (windowY >= floor)
@@ -569,10 +543,11 @@ namespace CodexPet
                 verticalSpeed = 0;
                 falling = false;
                 tilt = dragSpeed = dragMagnitude = 0;
-                landingTime = simulationTime;
-                landPoseUntil = SupportsPoses() ? simulationTime + 0.10 : 0;
+                landingTime = paused ? -10 : simulationTime;
+                landPoseUntil = !paused && SupportsPoses() ? simulationTime + 0.10 : 0;
             }
             Top = (int)Math.Round(windowY);
+            ReconcileOfficialPosePlacement(previousFootprint,landingArea,true);
             return true;
         }
 
@@ -613,6 +588,10 @@ namespace CodexPet
                 else if (CurrentPose() != null)
                 {
                     DrawPose(g, CurrentPose());
+                }
+                else if (OfficialAction() != null)
+                {
+                    DrawOfficialAction(g,OfficialAction());
                 }
                 else
                 {
@@ -675,6 +654,7 @@ namespace CodexPet
 
         private void DrawDockedHead(Graphics g)
         {
+            if (variant == "official") { DrawOfficialPeek(g); return; }
             Rectangle source = GetGripCrop();
             float height = GripHeight();
             float width = height * source.Width / source.Height;
@@ -721,11 +701,14 @@ namespace CodexPet
 
         private string HitPart(Point location)
         {
+            if (variant == "official" && seated && pinnedOfficialPose == null && bank.HasOfficialMotions) return "pose";
             if (CurrentPose() != null) return "pose";
             if (inverseCharacterTransform == null) return "body";
             PointF[] point = new PointF[] { new PointF(location.X, location.Y) };
             inverseCharacterTransform.TransformPoints(point);
+            if (OfficialAction() != null) return OfficialActionHitPart(point[0]);
             double y = (point[0].Y + petSize) / petSize;
+            if (variant == "official") return OfficialHitPart(y);
             if (y < (variant == "standard" ? 0.23 : 0.30)) return "hair";
             if (y < (variant == "standard" ? 0.40 : 0.57)) return "face";
             return y < 0.80 ? "body" : "feet";
@@ -733,7 +716,8 @@ namespace CodexPet
 
         private void ReactToPart(string part)
         {
-            if (dockSide != 0) ExpandDock(false, Cursor.Position);
+            PrepareInteraction();
+            RectangleF previousFootprint = PlacementFootprint();
             sleeping = false;
             seated = false;
             landPoseUntil = 0;
@@ -746,6 +730,7 @@ namespace CodexPet
             else if (part == "face") { feedbackExpression = "shy"; bubbleText = "别盯着看。"; }
             else if (part == "feet") { feedbackExpression = "happy"; bubbleText = "欸！"; if (dockSide == 0) jumpTime = simulationTime; }
             else { feedbackExpression = "annoyed"; bubbleText = "不许乱戳。"; annoyedUntil = feedbackUntil; }
+            ReconcileOfficialPosePlacement(previousFootprint,false);
             DrawFrame();
         }
 
@@ -766,15 +751,19 @@ namespace CodexPet
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (!pressed) return;
             Point cursor = Cursor.Position;
+            MovePointer(cursor, Screen.FromPoint(cursor).WorkingArea);
+        }
+
+        private void MovePointer(Point cursor, Rectangle dragArea)
+        {
+            if (!pressed) return;
             int dx = cursor.X - downCursor.X, dy = cursor.Y - downCursor.Y;
             if (!dragging && (Math.Abs(dx) > 4 || Math.Abs(dy) > 4))
             {
-                if (dockSide != 0) { ExpandDock(true, cursor); dx = dy = 0; }
+                ResumeAnimation();
                 dragging = true;
-                sleeping = false;
-                seated = false;
+                if (gravityEnabled) { sleeping = seated = false; pinnedOfficialPose = null; }
                 dragPoseStarted = clock.Elapsed.TotalSeconds;
                 landPoseUntil = 0;
                 falling = false;
@@ -783,16 +772,33 @@ namespace CodexPet
                 annoyedUntil = simulationTime + 1.1;
             }
             if (!dragging) return;
+            if (dockSide != 0)
+            {
+                // Keep the original monitor and press anchor while sliding. Only inward
+                // horizontal displacement detaches; vertical/outward travel never does.
+                int inward = -dockSide * dx;
+                int detachDistance = Clamp((int)Math.Round(petSize * 0.14), 32, 52);
+                if (inward < detachDistance)
+                {
+                    dockCenterY = downWindow.Y + dy + Height / 2;
+                    PositionDock();
+                    dockStarted = clock.Elapsed.TotalSeconds - 1;
+                    dockTransitionPending = false;
+                    DrawFrame();
+                    return;
+                }
+                ExpandDock(true, cursor);
+                dx = dy = 0;
+                dragPoseStarted = lastDragTime = clock.Elapsed.TotalSeconds;
+            }
             double now = clock.Elapsed.TotalSeconds;
             dragSpeed = (cursor.X - lastCursor.X) / Math.Max(0.008, now - lastDragTime);
             double movedX = cursor.X - lastCursor.X, movedY = cursor.Y - lastCursor.Y;
             dragMagnitude = Math.Sqrt(movedX * movedX + movedY * movedY) / Math.Max(0.008, now - lastDragTime);
             lastDragTime = now;
             lastCursor = cursor;
-            Rectangle dragArea = Screen.FromPoint(cursor).WorkingArea;
             UpdateDockArming(cursor);
-            Location = new Point(Clamp(downWindow.X + dx, dragArea.Left, dragArea.Right - Width),
-                Clamp(downWindow.Y + dy, dragArea.Top, dragArea.Bottom - Height));
+            Location = ClampPlacement(new Point(downWindow.X + dx, downWindow.Y + dy), dragArea);
             windowY = Top;
             DrawFrame();
         }
@@ -801,13 +807,26 @@ namespace CodexPet
         {
             base.OnMouseUp(e);
             if (e.Button != MouseButtons.Left || !pressed) return;
+            Point cursor = Cursor.Position;
+            ReleasePointer(cursor, Screen.FromPoint(cursor).WorkingArea);
+        }
+
+        private void ReleasePointer(Point cursor, Rectangle area)
+        {
+            RectangleF previousFootprint = PlacementFootprint();
             bool wasDragging = dragging;
             pressed = dragging = false;
             Capture = false;
-            if (wasDragging) { Point cursor = Cursor.Position; FinishDrag(cursor, Screen.FromPoint(cursor).WorkingArea); return; }
-            if (dockSide != 0) { sleeping = false; ExpandDock(false, Cursor.Position); return; }
-            if (sleeping || seated || pressedPart == "pose") { StandUp(); return; }
-            if (paused) return;
+            if (wasDragging)
+            {
+                if (dockSide != 0) { DrawFrame(); return; }
+                ReconcileOfficialPosePlacement(previousFootprint,area,false);
+                FinishDrag(cursor, area);
+                return;
+            }
+            if (dockSide != 0) { ResumeAnimation(); sleeping = false; ExpandDock(false, cursor); return; }
+            if (sleeping || (pinnedOfficialPose == null && (seated || pressedPart == "pose"))) { StandUp(); return; }
+            ResumeAnimation();
             double now = clock.Elapsed.TotalSeconds;
             clicks.Enqueue(now);
             while (clicks.Count > 0 && now - clicks.Peek() > 1.3) clicks.Dequeue();
@@ -820,9 +839,14 @@ namespace CodexPet
             base.OnMouseCaptureChanged(e);
             if (!Capture && pressed)
             {
+                RectangleF previousFootprint = PlacementFootprint();
                 bool wasDragging = dragging;
                 pressed = dragging = false;
-                if (wasDragging) BeginFall();
+                if (wasDragging && dockSide == 0)
+                {
+                    ReconcileOfficialPosePlacement(previousFootprint, false);
+                    BeginFall(PlacementWorkingArea());
+                }
             }
         }
 
@@ -835,9 +859,10 @@ namespace CodexPet
         {
             if (!autoDockArmed) return 0;
             int near = Clamp((int)Math.Round(petSize * 0.17), 36, 60);
+            RectangleF placementBounds = variant == "official" ? VisiblePlacementBounds(petBounds) : petBounds;
             // The caller selects this monitor from the cursor; its taskbar strip may lie below WorkingArea.
-            if (Math.Abs((long)cursor.X - area.Left) <= near && petBounds.Left <= area.Left + near) return -1;
-            if (Math.Abs((long)cursor.X - area.Right) <= near && petBounds.Right >= area.Right - near) return 1;
+            if (Math.Abs((long)cursor.X - area.Left) <= near && placementBounds.Left <= area.Left + near) return -1;
+            if (Math.Abs((long)cursor.X - area.Right) <= near && placementBounds.Right >= area.Right - near) return 1;
             return 0;
         }
 
@@ -856,15 +881,18 @@ namespace CodexPet
 
         private void BeginFall(Rectangle area)
         {
+            if (!gravityEnabled) { HoldPlacement(area); return; }
+            RectangleF previousFootprint = PlacementFootprint();
             landingArea = area;
-            Left = Clamp(Left, landingArea.Left, landingArea.Right - Width);
-            windowY = Math.Min(Top, landingArea.Bottom - Height);
+            Left = Clamp(Left, PlacementLeftLimit(landingArea), PlacementRightLimit(landingArea));
+            windowY = variant == "official" ? ClampPlacement(Location, landingArea).Y : Math.Min(Top, PlacementFloor(landingArea));
             Top = (int)windowY;
             verticalSpeed = 0;
             tilt = dragSpeed = dragMagnitude = 0;
             jumpTime = landingTime = -10;
             landPoseUntil = 0;
             falling = true;
+            ReconcileOfficialPosePlacement(previousFootprint,area,false);
             annoyedUntil = simulationTime + 0.6;
             DrawFrame();
         }
@@ -886,13 +914,18 @@ namespace CodexPet
         public void SmokeTest(string directory)
         {
             StringBuilder results = new StringBuilder();
+            SmokeFreePlacement(results);
+            SmokeMaidFaces(results);
+            SmokeSleepPlacement(results);
+            SmokeInterruptedPlacement(results);
+            gravityEnabled = true; // Retain coverage of the opt-in legacy gravity behavior.
             results.AppendLine("PASS: startup and SpriteBank construction");
             suppressPoses = true; // Keep the original 50-expression and inverse-mapping checks independent of pose overlays.
             outfit = "maid";
             foreach (string type in new string[] { "standard", "big-head" })
             {
                 variant = type;
-                foreach (int size in new int[] { 200, 280, 360 })
+                foreach (int size in new int[] { 160, 240, 360 })
                 {
                     petSize = size;
                     ResizeCanvas();
@@ -909,7 +942,7 @@ namespace CodexPet
                         results.AppendLine("PASS: " + type + " " + size + " " + expression + " transparent render");
                     }
                 }
-                sleeping = false; annoyedUntil = 0; petSize = 280; ResizeCanvas();
+                sleeping = false; annoyedUntil = 0; petSize = 240; ResizeCanvas();
                 jumpTime = simulationTime - 0.34;
                 DrawFrame();
                 canvas.Save(Path.Combine(directory, type + "-jump.png"), ImageFormat.Png);
@@ -959,9 +992,17 @@ namespace CodexPet
             SmokeWardrobe(directory, results);
             SmokePoses(directory, results);
             SmokeAutoDock(results);
+            SmokeEdgeSliding(results);
             SmokeDockAnimation(directory, results);
             SmokeGripStability(results);
             SmokeStableLanding(results);
+            SmokeInteractions(results);
+            SmokeMenuLayout(directory, results);
+            SmokeDockSizes(directory, results);
+            SmokeOfficial(directory, results);
+            SmokeOfficialActions(directory, results);
+            SmokeOfficialPlacement(results);
+            SmokeCheongsamStyles(directory, results);
             if (Clamp(-1800, -1920, -400) != -1800 || Clamp(-2200, -1920, -400) != -1920)
                 throw new InvalidOperationException("Negative multi-monitor bounds failed.");
             results.AppendLine("PASS: negative monitor coordinate clamping");
@@ -977,7 +1018,7 @@ namespace CodexPet
                 variant = type;
                 dockSide = 0;
                 sleeping = paused = dragging = pressed = falling = false;
-                petSize = 280;
+                petSize = 240;
                 simulationTime = 20;
                 blinkUntil = 0;
                 ResizeCanvas();
@@ -1041,7 +1082,7 @@ namespace CodexPet
             variant = "standard";
             outfit = "maid";
             dockSide = 0;
-            petSize = 280;
+            petSize = 240;
             paused = false;
             simulationTime = 20;
             jumpTime = landingTime = -10;
@@ -1094,7 +1135,7 @@ namespace CodexPet
 
         private void SmokeAutoDock(StringBuilder results)
         {
-            variant = "standard"; outfit = "maid"; petSize = 280;
+            variant = "standard"; outfit = "maid"; petSize = 240;
             sleeping = seated = dragging = pressed = false;
             foreach (Rectangle area in new Rectangle[] { new Rectangle(0, 0, 1920, 1080), new Rectangle(-1920, -1080, 1920, 1080) })
             {
@@ -1148,7 +1189,7 @@ namespace CodexPet
             foreach (string type in new string[] { "standard", "big-head" })
             foreach (int side in new int[] { -1, 1 })
             {
-                variant = type; outfit = "maid"; dockSide = 0; petSize = 280;
+                variant = type; outfit = "maid"; dockSide = 0; petSize = 240;
                 paused = true; breathing = false; simulationTime = 0;
                 ResizeCanvas();
                 DockAtSide(side, area, -540);
@@ -1201,7 +1242,7 @@ namespace CodexPet
             foreach (string type in new string[] { "standard", "big-head" })
             foreach (int side in new int[] { -1, 1 })
             {
-                variant = type; outfit = "casual"; dockSide = 0; petSize = 280;
+                variant = type; outfit = "casual"; dockSide = 0; petSize = 240;
                 paused = false; breathing = true; simulationTime = 0;
                 ResizeCanvas();
                 DockAtSide(side, area, -540);
@@ -1265,7 +1306,7 @@ namespace CodexPet
             foreach (string type in new string[] { "standard", "big-head" })
             foreach (Rectangle area in new Rectangle[] { new Rectangle(0, 0, 1920, 1080), new Rectangle(-1920, -1080, 1920, 1080) })
             {
-                variant = type; outfit = "maid"; dockSide = 0; petSize = 280;
+                variant = type; outfit = "maid"; dockSide = 0; petSize = 240;
                 dragging = sleeping = seated = paused = false;
                 ResizeCanvas();
                 landingArea = area;
@@ -1363,6 +1404,7 @@ namespace CodexPet
                 if (timer != null) { timer.Stop(); timer.Dispose(); timer = null; }
                 if (tray != null) { tray.Visible = false; tray.Dispose(); tray = null; }
                 if (trayIcon != null) { trayIcon.Dispose(); trayIcon = null; }
+                if (applicationIcon != null) { applicationIcon.Dispose(); applicationIcon = null; }
                 if (menu != null) { menu.Dispose(); menu = null; }
                 if (canvas != null) { canvas.Dispose(); canvas = null; }
                 if (inverseCharacterTransform != null) { inverseCharacterTransform.Dispose(); inverseCharacterTransform = null; }

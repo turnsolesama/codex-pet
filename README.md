@@ -6,60 +6,63 @@
 
 # 枣子姐桌宠 NatsumePet
 
-《星光咖啡馆与死神之蝶》四季夏目（枣子姐）的 Q 版 Windows 桌宠。双击启动、无需安装，角色图片内置于程序中；不联网、不添加开机启动。
+《星光咖啡馆与死神之蝶》四季夏目（枣子姐）的 Q 版 Windows 桌宠。双击启动，无需安装；人物素材内置，程序不联网、不添加开机启动。
 
-**[下载 v0.4.1 · NatsumePet.exe](https://github.com/turnsolesama/codex-pet/releases/tag/v0.4.1)**（约 82 MB，需 Windows 自带的 .NET Framework 4.x）
+**[下载 v0.5.9 · Windows 便携 ZIP](https://github.com/turnsolesama/codex-pet/releases/download/v0.5.9/NatsumePet-v0.5.9-Windows.zip)** · **[单文件 EXE](https://github.com/turnsolesama/codex-pet/releases/download/v0.5.9/NatsumePet.exe)**
 
-## 特性
+Windows / .NET Framework 4.x。解压后打开 `NatsumePet/NatsumePet.exe`；EXE 也可直接下载运行。版本说明及校验值见 [v0.5.9 发布页](https://github.com/turnsolesama/codex-pet/releases/tag/v0.5.9)。[历史 v0.4.1](https://github.com/turnsolesama/codex-pet/releases/tag/v0.4.1) 保留。
 
-- **两种 Q 版体型**：标准 Q 版与大头 Q 版，200 / 280 / 360 三档尺寸；重复启动不会出现第二只
-- **五套服装自由换**：女仆装、日常私服、粉色服务员装、冬日外套、红金旗袍；每种「体型 × 服装」组合都有待机、闭眼、开心、害羞、嫌弃五张独立表情帧
-- **按部位点击互动**：点头发开心、点脸害羞、点衣服嫌弃、点脚轻跳；短时间连点三次会被嫌弃
-- **物理拖拽**：按住拎起、松手落地回弹；支持睡觉、置顶、暂停，透明区域不遮挡后面的窗口
-- **边缘收纳**：拖到屏幕左右边缘或角落松手，自动藏到边缘，双手抓住屏幕边框探头；点击展开，按住拖出恢复
+## 本版变化
 
-## 互动一览
+- 四档尺寸：小号 160、中号 240、大号 360、超大号 432；超大号比大号大 20%，全身和边缘探头同比缩放。
+- 默认关闭重力，拖到哪里停在哪里；标准 Q 版女仆的坐姿、睡姿拖动时可以保留。需要下落时，在“额外功能 → 重力下落”开启。
+- 收纳后可沿左右边缘上下拖动，向屏幕内拖出才展开。女仆抓框贴图已修正裁切，手指贴住边框。
+- 退出固定在菜单底部；暂停后主动点击或拖动恢复互动。高 DPI 下动作画面能持续刷新。
+- 更新应用图标，修复动作切换、收纳及拖动中断时的位置处理。
+
+公开包提供两种 Q 版，不含游戏原始立绘或本地等身素材。本地等身版本的源代码路径保留；`-IncludeOfficial` 仅在自备完整私有素材时可用，这些素材和安装包不会随公开仓库上传。
+
+## 互动
+
+两种体型均支持女仆、日常私服、粉色服务员、冬日外套、红金旗袍五套服装，以及待机、闭眼、开心、害羞和嫌弃表情。
 
 | 操作 | 回应 |
 | --- | --- |
-| 点头发 | 开心表情，轻轻摇晃 |
-| 点脸 | 害羞表情，小幅躲闪 |
-| 点衣服 | 嫌弃表情，短暂抖动 |
-| 点脚 | 开心轻跳 |
-| 短时间连续点三次 | 嫌弃，提醒别一直戳 |
-| 按住拖动 | 提起、倾斜；松手下落并回弹 |
+| 点头发 | 开心，轻轻摇晃 |
+| 点脸 | 害羞，躲闪 |
+| 点衣服 | 嫌弃 |
+| 点脚 | 轻跳 |
+| 短时间连点三次 | 嫌弃并提醒 |
+| 拖动松手 | 停在当前位置；启用额外重力后下落 |
 | 睡觉时点击 | 唤醒 |
-| 拖到左右边缘 / 四角松手 | 身体藏到屏幕边缘，双手抓框探头 |
-| 点击或拖动探出的头 | 展开小人 |
+| 拖到左右边缘或角落 | 自动收纳，双手抓框探头 |
+| 沿边上下拖动 | 调整收纳位置 |
+| 点击探头或向屏幕内拖出 | 展开 |
 
-右键小人或系统托盘图标打开菜单：换装、切换体型与尺寸、睡觉、置顶、暂停、手动收纳到左侧 / 右侧、退出。双击托盘图标把小人带回鼠标所在屏幕的右下角。
+右键小人或托盘图标打开分组菜单，可换装、切换体型和大小、坐下/睡觉、收纳、置顶或暂停；“退出桌宠”始终位于底部。双击托盘图标回到鼠标所在屏幕的右下角。重复启动不会出现第二只。
 
-标准 Q 版女仆装额外接回了原动作稿：坐下 / 站起、睡觉打盹、被拎起晃动、落地蹲下回弹。
+标准 Q 版女仆额外支持坐下、打盹、拎起、拖动及落地动作。当前采用独立贴图和整体变换动画，尚非骨骼或逐帧动画。
 
 ## 从源码构建
 
-源码为纯 C# 5 + WinForms + GDI+，无外部程序包。`desktop/build.ps1` 调用 Windows 自带的 .NET Framework C# 编译器，把 `assets/` 中的立绘内嵌为资源，输出到 `releases/desktop-v0.4.1/`：
+C# 5 + WinForms + GDI+，无第三方程序包，使用 Windows 自带 .NET Framework 编译器。
 
 ```powershell
-cd desktop
-./build.ps1
+./desktop/build.ps1
 ```
 
-诊断模式：`NatsumePet.exe --smoke-test --diagnostics <绝对目录>` 输出测试结果与透明渲染 PNG；`--outfit casual` 可指定初始服装（`maid` / `casual` / `pink-waitress` / `winter-coat` / `red-cheongsam`）。
+输出 `releases/desktop-v0.5.9/`，包含 EXE、说明和校验元数据。公开构建引用的 Q 版素材及图标均在仓库中。
 
-## 目录结构
-
-```
-desktop/src/                    C# 源码（窗口、分层透明、精灵、交互）
-desktop/build.ps1               构建脚本：编译并打包 exe、使用说明、package.json
-assets/natsume/                 构建引用的立绘素材（表情帧、服装、抓框、动作稿）
-docs/screenshots/               README 截图
+```powershell
+./releases/desktop-v0.5.9/NatsumePet.exe --smoke-test --diagnostics C:/temp/natsume-check
 ```
 
-素材由 AI 生成并经多轮修复与审核；生成提示词与校验记录见 `assets/natsume/edge-grip-v2/` 与 `assets/natsume/wardrobe-runtime-v1/` 下的文档。
+诊断会写入检查结果与渲染图片。`--outfit casual` 指定初始服装，`--variant big-head` 指定大头 Q 版。原生桌面画面检查可使用 `desktop/check-runtime.ps1`，测试截图仅保留在本地。
+
+[发布校验说明](docs/RELEASE-v0.5.9.md)。本机验证为 Windows、150% 系统缩放；自动检查不代替其他 DPI、长期运行及真实鼠标操作体验。
 
 ## 说明
 
-本作品为个人兴趣的同人创作。角色「四季夏目」出自 Yuzusoft 游戏《星光咖啡馆与死神之蝶》，版权归原公司所有。程序不联网、不写注册表、不添加开机启动。
+本作品为个人兴趣的同人创作。角色「四季夏目」出自 Yuzusoft 游戏《星光咖啡馆与死神之蝶》，版权归原公司所有。公开 Q 版素材由 AI 生成并经修复与审核。程序不写注册表，不添加开机启动。
 
 更多个人项目见 [portfolio](https://github.com/turnsolesama/portfolio)。

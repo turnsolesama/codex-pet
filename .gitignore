@@ -9,6 +9,7 @@ releases/
 animation-preview/
 desktop/qa/
 desktop/qa-v*/
+desktop/qa-official-import/
 
 # 历史审核与概念素材(仅本地保留)
 concepts/
@@ -24,6 +25,18 @@ assets/natsume/*
 !assets/natsume/body-types-v1/
 !assets/natsume/edge-grip-v2/
 !assets/natsume/wardrobe-runtime-v1/
+!assets/natsume/app-icon-v1/
+assets/natsume/app-icon-v1/*
+!assets/natsume/app-icon-v1/icon.ico
+!assets/natsume/app-icon-v1/icon.png
+!assets/natsume/edge-grip-v3/
+assets/natsume/edge-grip-v3/*
+!assets/natsume/edge-grip-v3/standard/
+!assets/natsume/edge-grip-v3/big-head/
+assets/natsume/edge-grip-v3/standard/*
+assets/natsume/edge-grip-v3/big-head/*
+!assets/natsume/edge-grip-v3/standard/maid.png
+!assets/natsume/edge-grip-v3/big-head/maid.png
 assets/natsume/restoration-v1/*
 !assets/natsume/restoration-v1/outfits/
 !assets/natsume/restoration-v1/motions/
